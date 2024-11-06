@@ -1,11 +1,11 @@
 [
-    {
-        "journeyId": 2,
-        "name": "Teszt Elek",
-        "email": "elek.teszt@e-level.com",
-        "numberOfParticipants": 2,
-        "lastCovidVaccineDate": "2022-01-30",
-        "acceptedConditions": true,
-        "id": 1
-    }
+  {
+    "journeyId": 2,
+    "name": "Teszt Elek",
+    "email": "elek.teszt@e-level.com",
+    "numberOfParticipants": 2,
+    "lastCovidVaccineDate": "2022-01-30",
+    "acceptedConditions": true,
+    "id": 1
+  }
 ]

@@ -1,0 +1,114 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Jedlik REST API Server for 'Á.L.K. Utazási iroda'",
+    "description": ""
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": ""
+    }
+  ],
+  "tags": [
+    {
+      "name": "",
+      "description": ""
+    }
+  ],
+  "paths": {
+    "/api/journeys": {
+      "get": {
+        "tags": [
+          "Journeys"
+        ],
+        "summary": "Read all data from journeys table",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/journeys/short": {
+      "get": {
+        "tags": [
+          "Journeys"
+        ],
+        "summary": "Read limited journey data",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/reserve": {
+      "post": {
+        "tags": [
+          "Reservations"
+        ],
+        "summary": "Read limited journey data",
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "journeyId": {
+                    "type": "number"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "numberOfParticipants": {
+                    "type": "number"
+                  },
+                  "lastCovidVaccineDate": {
+                    "type": "string"
+                  },
+                  "acceptedConditions": {
+                    "type": "boolean"
+                  }
+                },
+                "example": {
+                  "journeyId": 2,
+                  "name": "Kiss Dóra",
+                  "email": "kiss.dora@mail.hu",
+                  "numberOfParticipants": 2,
+                  "lastCovidVaccineDate": "2024-08-28",
+                  "acceptedConditions": true
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

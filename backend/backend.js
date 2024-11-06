@@ -5,16 +5,22 @@ const express_1 = tslib_1.__importDefault(require("express"));
 const cors_1 = tslib_1.__importDefault(require("cors"));
 const fs_1 = require("fs");
 const morgan_1 = tslib_1.__importDefault(require("morgan"));
+const swagger_ui_express_1 = tslib_1.__importDefault(require("swagger-ui-express"));
+const swagger_output_json_1 = tslib_1.__importDefault(require("../backend/swagger-output.json"));
 const app = (0, express_1.default)();
 const PORT = 3000;
 // Middleware to parse request body
 app.use(express_1.default.json());
+// Add Swagger UI to the app
+const options = { swaggerOptions: { tryItOutEnabled: true } };
+app.use("/docs", swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swagger_output_json_1.default, options));
 // Enabled CORS (Cross-Origin Resource Sharing):
 app.use((0, cors_1.default)());
 // Logger middleware: log all requests to the console
 app.use((0, morgan_1.default)("dev"));
-// Read all data from journeys table
 app.get("/api/journeys", async (req, res) => {
+    // #swagger.tags = ['Journeys']
+    // #swagger.summary = 'Read all data from journeys table'
     const data = await readDataFromFile("journeys");
     if (data) {
         res.send(data.sort((a, b) => a.id - b.id));
@@ -23,8 +29,9 @@ app.get("/api/journeys", async (req, res) => {
         res.status(404).send({ message: "Error while reading data." });
     }
 });
-// Read and create limited journey data
 app.get("/api/journeys/short", async (req, res) => {
+    // #swagger.tags = ['Journeys']
+    // #swagger.summary = 'Read limited journey data'
     try {
         const data = await readDataFromFile("journeys");
         if (data) {
@@ -47,6 +54,35 @@ app.get("/api/journeys/short", async (req, res) => {
 });
 // POST operation to create a new journey
 app.post("/api/reserve", async (req, res) => {
+    // #swagger.tags = ['Reservations']
+    // #swagger.summary = 'Read limited journey data'
+    /* #swagger.requestBody = {
+            required: true,
+            content: {
+                "application/json": {
+                    schema: {
+                        type: "object",
+                        properties: {
+                            journeyId: { type: "number" },
+                            name: { type: "string" },
+                            email: { type: "string" },
+                            numberOfParticipants: { type: "number" },
+                            lastCovidVaccineDate: { type: "string" },
+                            acceptedConditions: { type: "boolean" }
+                        },
+                        example: {
+                            journeyId: 2,
+                            name: "Kiss Dóra",
+                            email: "kiss.dora@mail.hu",
+                            numberOfParticipants: 2,
+                            lastCovidVaccineDate: "2024-08-28",
+                            acceptedConditions: true
+                        }
+                    }
+                }
+            }
+        }
+    */
     try {
         const data = await readDataFromFile("reservations");
         if (data) {
@@ -101,7 +137,7 @@ app.post("/api/reserve", async (req, res) => {
 //     }
 // });
 app.listen(PORT, () => {
-    console.log(`Jedlik Json-Backend-Server listening on port ${PORT}`);
+    console.log(`Jedlik Json-Backend-Server Swagger: http://localhost:${PORT}/docs`);
 });
 // Utility functions to read/write data from/to file
 async function readDataFromFile(table) {
