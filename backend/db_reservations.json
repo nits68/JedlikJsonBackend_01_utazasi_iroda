@@ -7,5 +7,14 @@
     "lastCovidVaccineDate": "2022-01-30",
     "acceptedConditions": true,
     "id": 1
+  },
+  {
+    "journeyId": 2,
+    "name": "Kiss Dóra",
+    "email": "kiss.dora@mail.hu",
+    "numberOfParticipants": 2,
+    "lastCovidVaccineDate": "2024-08-28",
+    "acceptedConditions": true,
+    "id": 2
   }
 ]

@@ -92,13 +92,7 @@ app.post("/api/reserve", async (req, res) => {
         if (data) {
             const newReservation = req.body;
             newReservation.id = data.length + 1;
-            if (Object.keys(newReservation).length != 7 ||
-                !newReservation.journeyId ||
-                !newReservation.name ||
-                !newReservation.email ||
-                !newReservation.numberOfParticipants ||
-                !newReservation.lastCovidVaccineDate ||
-                !newReservation.acceptedConditions)
+            if (Object.keys(newReservation).length != 7 || !newReservation.journeyId || !newReservation.name || !newReservation.email || !newReservation.numberOfParticipants || !newReservation.lastCovidVaccineDate || !newReservation.acceptedConditions)
                 throw new Error("Validation failed: A kérés mezői nem megfelelők.");
             data.push(newReservation);
             const response = await saveDataToFile("reservations", data);
@@ -158,7 +152,7 @@ async function readDataFromFile(table) {
         return JSON.parse(data);
     }
     catch (error) {
-        return [];
+        return [error.message];
     }
 }
 async function saveDataToFile(table, data) {
