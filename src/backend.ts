@@ -24,11 +24,16 @@ app.use(morgan("dev"));
 app.get("/api/journeys", async (req: Request, res: Response) => {
     // #swagger.tags = ['Journeys']
     // #swagger.summary = 'Read all data from journeys table'
-    const data = await readDataFromFile("journeys");
-    if (data) {
-        res.send(data.sort((a: any, b: any) => a.id - b.id));
-    } else {
-        res.status(404).send({ message: "Error while reading data." });
+    try {
+        const data = await readDataFromFile("journeys");
+        if (data) {
+            res.send(data.sort((a: any, b: any) => a.id - b.id));
+        } else {
+            res.status(404).send({ message: "Error while reading data." });
+        }    
+    } catch (error) {
+        res.status(400).send({ message: error.message });   
+        
     }
 });
 
@@ -91,6 +96,13 @@ app.post("/api/reserve", async (req: Request, res: Response) => {
         if (data) {
             const newReservation: any = req.body;
             newReservation.id = data.length + 1;
+            if (Object.keys(newReservation).length != 7 ||
+                    !newReservation.journeyId || 
+                    !newReservation.name || 
+                    !newReservation.email || 
+                    !newReservation.numberOfParticipants ||
+                    !newReservation.lastCovidVaccineDate ||
+                    !newReservation.acceptedConditions) throw new Error("Validation failed: A kérés mezői nem megfelelők.");
             data.push(newReservation);
             const response = await saveDataToFile("reservations", data);
             if (response == "OK") {
@@ -150,7 +162,6 @@ async function readDataFromFile(table: string): Promise<any[]> {
         const data = await fs.readFile(`db_${table}.json`, "utf8");
         return JSON.parse(data);
     } catch (error) {
-        console.error(error);
         return [];
     }
 }

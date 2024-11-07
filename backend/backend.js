@@ -21,12 +21,17 @@ app.use((0, morgan_1.default)("dev"));
 app.get("/api/journeys", async (req, res) => {
     // #swagger.tags = ['Journeys']
     // #swagger.summary = 'Read all data from journeys table'
-    const data = await readDataFromFile("journeys");
-    if (data) {
-        res.send(data.sort((a, b) => a.id - b.id));
+    try {
+        const data = await readDataFromFile("journeys");
+        if (data) {
+            res.send(data.sort((a, b) => a.id - b.id));
+        }
+        else {
+            res.status(404).send({ message: "Error while reading data." });
+        }
     }
-    else {
-        res.status(404).send({ message: "Error while reading data." });
+    catch (error) {
+        res.status(400).send({ message: error.message });
     }
 });
 app.get("/api/journeys/short", async (req, res) => {
@@ -52,10 +57,9 @@ app.get("/api/journeys/short", async (req, res) => {
         res.status(400).send({ message: error.message });
     }
 });
-// POST operation to create a new journey
 app.post("/api/reserve", async (req, res) => {
     // #swagger.tags = ['Reservations']
-    // #swagger.summary = 'Read limited journey data'
+    // #swagger.summary = 'Create a new reservation'
     /* #swagger.requestBody = {
             required: true,
             content: {
@@ -88,6 +92,14 @@ app.post("/api/reserve", async (req, res) => {
         if (data) {
             const newReservation = req.body;
             newReservation.id = data.length + 1;
+            if (Object.keys(newReservation).length != 7 ||
+                !newReservation.journeyId ||
+                !newReservation.name ||
+                !newReservation.email ||
+                !newReservation.numberOfParticipants ||
+                !newReservation.lastCovidVaccineDate ||
+                !newReservation.acceptedConditions)
+                throw new Error("Validation failed: A kérés mezői nem megfelelők.");
             data.push(newReservation);
             const response = await saveDataToFile("reservations", data);
             if (response == "OK") {
@@ -146,7 +158,6 @@ async function readDataFromFile(table) {
         return JSON.parse(data);
     }
     catch (error) {
-        console.error(error);
         return [];
     }
 }
