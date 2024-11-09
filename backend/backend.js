@@ -27,7 +27,7 @@ app.get("/api/journeys", async (req, res) => {
             res.send(data.sort((a, b) => a.id - b.id));
         }
         else {
-            res.status(404).send({ message: "Error while reading data." });
+            res.status(404).send({ message: "Hiba az adatok olvasásakor!" });
         }
     }
     catch (error) {
@@ -50,7 +50,7 @@ app.get("/api/journeys/short", async (req, res) => {
                 .sort((a, b) => a.id - b.id));
         }
         else {
-            res.status(404).send({ message: "Error while reading data." });
+            res.status(404).send({ message: "Hiba az adatok olvasásakor!" });
         }
     }
     catch (error) {
@@ -93,7 +93,7 @@ app.post("/api/reserve", async (req, res) => {
             const newReservation = req.body;
             newReservation.id = Math.max(...data.map(e => e.id)) + 1;
             if (Object.keys(newReservation).length != 7 || !newReservation.journeyId || !newReservation.name || !newReservation.email || !newReservation.numberOfParticipants || !newReservation.lastCovidVaccineDate || !newReservation.acceptedConditions)
-                throw new Error("Validation failed: A kérés mezői nem megfelelők, vagy nem tartalmaznak értéket.");
+                throw new Error("A kérés mezői nem megfelelők, vagy nem tartalmaznak értéket.");
             data.push(newReservation);
             const response = await saveDataToFile("reservations", data);
             if (response == "OK") {
