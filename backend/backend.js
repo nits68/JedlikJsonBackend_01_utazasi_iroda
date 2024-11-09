@@ -91,9 +91,9 @@ app.post("/api/reserve", async (req, res) => {
         const data = await readDataFromFile("reservations");
         if (data) {
             const newReservation = req.body;
-            newReservation.id = data.length + 1;
+            newReservation.id = Math.max(...data.map(e => e.id)) + 1;
             if (Object.keys(newReservation).length != 7 || !newReservation.journeyId || !newReservation.name || !newReservation.email || !newReservation.numberOfParticipants || !newReservation.lastCovidVaccineDate || !newReservation.acceptedConditions)
-                throw new Error("Validation failed: A kérés mezői nem megfelelők.");
+                throw new Error("Validation failed: A kérés mezői nem megfelelők, vagy nem tartalmaznak értéket.");
             data.push(newReservation);
             const response = await saveDataToFile("reservations", data);
             if (response == "OK") {
